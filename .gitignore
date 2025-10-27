@@ -1,0 +1,10 @@
+bin
+include
+lib
+share
+*.log
+*.tmp
+.DS_Store
+.vscode
+.idea
+*.iml
