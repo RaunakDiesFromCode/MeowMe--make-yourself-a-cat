@@ -4,13 +4,13 @@ import numpy as np
 import os
 import time
 
-# --- Settings (tweak if needed) ---
+
 MOUTH_OPEN_THRESH = 0.02   # mouth open threshold
 SMILE_THRESH = 0.065        # mouth corner distance threshold for smile
 ELBOW_BUFFER = 0.04        # how much higher wrist must be than elbow
 MOUTH_SHUT_TIMEOUT = 1.0   # seconds before reverting to normal after shut
 
-# --- Init Mediapipe ---
+
 mp_face = mp.solutions.face_mesh
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
@@ -19,7 +19,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 face_mesh = mp_face.FaceMesh(refine_landmarks=True)
 pose_detector = mp_pose.Pose()
 
-# --- Load cat images ---
+
 CAT_DIR = os.path.join(os.path.dirname(__file__), "cats")
 cat_images = {}
 if os.path.exists(CAT_DIR):
@@ -38,7 +38,7 @@ print(f"Loaded {len(cat_images)} cat images:", list(cat_images.keys()))
 
 cap = cv2.VideoCapture(0)
 
-# --- Mouth/Smile tracking ---
+
 mouth_state = "normal"
 last_mouth_closed_time = 0.0
 smiling = False
@@ -60,7 +60,7 @@ while True:
     mouth_open = False
     smiling = False  # reset each frame
 
-    # --- FACE DETECTION ---
+
     if face_results.multi_face_landmarks:
         face_landmarks = face_results.multi_face_landmarks[0].landmark
 
@@ -83,7 +83,7 @@ while True:
         mouth_width = abs(right_mouth.x - left_mouth.x)
         smiling = mouth_width > SMILE_THRESH
 
-        # --- mouth state machine ---
+
         now = time.time()
         if mouth_open:
             mouth_state = "open"
@@ -99,7 +99,7 @@ while True:
                     mouth_state = "normal"
                     last_mouth_closed_time = 0.0
 
-    # --- POSE DETECTION ---
+
     if pose_results.pose_landmarks:
         pose_landmarks = pose_results.pose_landmarks.landmark
         lw = pose_landmarks[mp_pose.PoseLandmark.LEFT_WRIST]
@@ -110,7 +110,7 @@ while True:
         left_hand_up = lw.y < (le.y - ELBOW_BUFFER)
         right_hand_up = rw.y < (re.y - ELBOW_BUFFER)
 
-    # --- CHOOSE CAT IMAGE ---
+
     cat_img = cat_images.get("cat_normal")
     current_pose = "normal"
 
@@ -149,7 +149,7 @@ while True:
                     cat_img = cat_images.get("cat_normal", cat_img)
                     current_pose = "normal"
 
-    # --- Draw debug info ---
+
     cv2.putText(frame, f"Head tilt: {head_angle:.1f}", (10, 30),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
     cv2.putText(frame, f"Hands: L={'Up' if left_hand_up else 'Down'}, R={'Up' if right_hand_up else 'Down'}",
@@ -161,7 +161,7 @@ while True:
     cv2.putText(frame, f"Cat pose: {current_pose}", (10, 150),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
-    # --- Display side-by-side ---
+
     if cat_img is not None:
         cat_display = cv2.resize(cat_img, (frame.shape[1], frame.shape[0]))
     else:
