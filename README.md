@@ -1,6 +1,6 @@
 # 🐱 MeoMe Mirror
 
-A fun interactive mirror app that mimics your facial expressions and gestures with cat images using **OpenCV** and **MediaPipe**.
+A fun interactive mirror app that mimics your facial expressions and gestures with cat meme images using **OpenCV** and **MediaPipe**.
 
 ---
 
@@ -14,7 +14,7 @@ A fun interactive mirror app that mimics your facial expressions and gestures wi
 
 * **Mouth detection (talking):**
   When you start talking, the cat switches between **talk open** and **talk shut**.
-  If you stop talking for more than 1 second, it goes back to normal.
+  If you stop talking for more than 1 second, it goes back to normal, else it keeps switching.
 
 * **Smile detection:**
   If you smile, the cat replaces its **normal** pose with a **smile** (if `cat_smile.jpg` exists).
@@ -69,12 +69,12 @@ Place all your cat `.jpg` files in a folder named **cats** beside the script.
 Run the script:
 
 ```bash
-python meome_mirror.py
+python cat_mirror.py
 ```
 
 A window opens showing:
 
-* Your webcam feed (left side)
+* Your webcam feed (left side) with debug lines/points
 * The matching cat image (right side)
 
 Press **ESC** to exit.
